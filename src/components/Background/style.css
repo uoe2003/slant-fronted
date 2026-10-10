@@ -1,0 +1,453 @@
+/* ════════════════════════════════════════════════════════════════
+   Background styles
+   All classes use the "abg-" prefix to avoid collisions.
+   Colors come from CSS variables set by palette.ts. They are "H S% L%",
+   so use them like this: hsl(var(--abg-tone-2) / 0.4)
+
+     bg-0, bg-1        page gradient
+     solid             flat color
+     surface-0..3      flat layers close to the background (waves)
+     tone-0..4         decoration, from soft to strong
+     accent            shifted hue for variety
+     accent-soft       dark/light version of the accent
+
+   Index: Base · Shared mask · Waves · Dots · Aurora · Bubbles · Rings
+          Stars · Hexagons · Shapes · Stripes · Calm variants
+          Reduced motion
+   ════════════════════════════════════════════════════════════════ */
+
+/* ───────── Base ───────── */
+.abg-root {
+  /* Does not depend on Tailwind */
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(
+    165deg,
+    hsl(var(--abg-bg-0)),
+    hsl(var(--abg-bg-1))
+  );
+}
+
+/* Fade-in when mounting or changing variant */
+.abg-layer {
+  position: absolute;
+  inset: 0;
+  animation: abg-fade-in 700ms ease-out both;
+}
+
+@keyframes abg-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ───────── Shared mask (Dots and Hexagons) ─────────
+   A big radial mask moves around: the layer is only visible
+   inside the "spot", which slowly crosses the screen. */
+.abg-sweep {
+  -webkit-mask-image: radial-gradient(circle closest-side, #000, transparent);
+  mask-image: radial-gradient(circle closest-side, #000, transparent);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 140% 140%;
+  mask-size: 140% 140%;
+  animation: abg-sweep 18s ease-in-out infinite alternate;
+}
+
+.abg-sweep--alt {
+  animation-duration: 27s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes abg-sweep {
+  from {
+    -webkit-mask-position: 0% 0%;
+    mask-position: 0% 0%;
+  }
+  to {
+    -webkit-mask-position: 100% 100%;
+    mask-position: 100% 100%;
+  }
+}
+
+/* ───────── Waves ───────── */
+.abg-wave-base {
+  position: absolute;
+  inset: 0;
+  background: hsl(var(--abg-surface-0));
+}
+
+/* The layer moves up and down; the svg inside drifts sideways */
+.abg-wave-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  will-change: transform;
+  animation: abg-bob ease-in-out infinite alternate;
+}
+
+.abg-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  /* 2 periods: moving -50% makes a perfect loop */
+  width: var(--abg-w, 200%);
+  animation: abg-slide linear infinite;
+  will-change: transform;
+}
+
+@keyframes abg-bob {
+  from {
+    transform: translate3d(0, calc(var(--abg-bob) * -1), 0);
+  }
+  to {
+    transform: translate3d(0, var(--abg-bob), 0);
+  }
+}
+
+@keyframes abg-slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* ───────── Dots ───────── */
+.abg-dots,
+.abg-dots-glow {
+  position: absolute;
+  inset: 0;
+  background-size: 22px 22px;
+}
+
+.abg-dots {
+  background-image: radial-gradient(
+    circle,
+    hsl(var(--abg-tone-3) / 0.14) 0.8px,
+    transparent 1.2px
+  );
+}
+
+.abg-dots-glow {
+  background-image: radial-gradient(
+    circle,
+    hsl(var(--abg-tone-3) / 0.75) 0.8px,
+    transparent 1.2px
+  );
+}
+
+/* ───────── Aurora ───────── */
+/* No blur filter: the radial gradient already fades out softly */
+.abg-blob {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+  animation: abg-drift ease-in-out infinite alternate;
+}
+
+@keyframes abg-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(var(--abg-x), var(--abg-y), 0) scale(1.25);
+  }
+}
+
+/* ───────── Bubbles ───────── */
+.abg-bubble {
+  position: absolute;
+  bottom: -12vh;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    hsl(var(--abg-tone-3) / 0.35),
+    hsl(var(--abg-tone-2) / 0.08)
+  );
+  border: 1px solid hsl(var(--abg-tone-3) / 0.25);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: abg-rise linear infinite;
+}
+
+@keyframes abg-rise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--abg-sway), -115vh, 0);
+    opacity: 0;
+  }
+}
+
+/* ───────── Rings ───────── */
+.abg-glow {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 70vmax;
+  height: 70vmax;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    hsl(var(--abg-tone-2) / 0.3),
+    transparent 65%
+  );
+  animation: abg-pulse 9s ease-in-out infinite alternate;
+}
+
+@keyframes abg-pulse {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.abg-ring {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 140vmax;
+  height: 140vmax;
+  border-radius: 9999px;
+  border: 2px solid hsl(var(--abg-tone-3) / 0.3);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: abg-ring 12s ease-out infinite;
+  animation-delay: calc(var(--abg-i) * -3s);
+}
+
+@keyframes abg-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.12);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ───────── Stars ───────── */
+.abg-star {
+  position: absolute;
+  border-radius: 9999px;
+  background: hsl(var(--abg-tone-4));
+  box-shadow: 0 0 calc(var(--abg-s) * 3) hsl(var(--abg-tone-4) / 0.5);
+  opacity: var(--abg-hi);
+  animation: abg-twinkle ease-in-out infinite alternate;
+}
+
+.abg-star--accent {
+  background: hsl(var(--abg-accent));
+  box-shadow: 0 0 calc(var(--abg-s) * 3) hsl(var(--abg-accent) / 0.5);
+}
+
+@keyframes abg-twinkle {
+  from {
+    opacity: var(--abg-lo);
+  }
+  to {
+    opacity: var(--abg-hi);
+  }
+}
+
+/* Shooting star: crosses the screen in ~1 s, then rests for the rest of the cycle */
+.abg-shoot {
+  position: absolute;
+  width: 90px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--abg-tone-4) / 0.9));
+  opacity: 0;
+  animation: abg-shoot linear infinite;
+}
+
+@keyframes abg-shoot {
+  0% {
+    transform: rotate(32deg) translateX(0);
+    opacity: 0;
+  }
+  2% {
+    opacity: 0.9;
+  }
+  8% {
+    transform: rotate(32deg) translateX(360px);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(32deg) translateX(360px);
+    opacity: 0;
+  }
+}
+
+/* ───────── Hexagons ───────── */
+.abg-hex {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ───────── Shapes ───────── */
+.abg-shape {
+  position: absolute;
+  will-change: transform;
+  animation: abg-float ease-in-out infinite alternate;
+}
+
+@keyframes abg-float {
+  from {
+    transform: translate3d(0, 0, 0) rotate(var(--abg-r0));
+  }
+  to {
+    transform: translate3d(var(--abg-x), var(--abg-y), 0) rotate(var(--abg-r1));
+  }
+}
+
+/* ───────── Stripes ───────── */
+/* Oversized, rotated box with soft vertical bands. The bands move exactly
+   one period (--abg-period), so the loop has no jump. */
+.abg-stripes {
+  position: absolute;
+  inset: -45%;
+  transform: rotate(-28deg);
+  -webkit-mask-image: radial-gradient(
+    ellipse closest-side,
+    #000 25%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(ellipse closest-side, #000 25%, transparent 100%);
+}
+
+.abg-stripes-inner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--abg-period) * -1);
+  right: calc(var(--abg-period) * -1);
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    hsl(var(--abg-tone-2) / var(--abg-alpha)) calc(var(--abg-period) / 2),
+    transparent var(--abg-period)
+  );
+  will-change: transform;
+  animation: abg-stripes var(--abg-dur) linear infinite;
+}
+
+@keyframes abg-stripes {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--abg-period), 0, 0);
+  }
+}
+
+/* ───────── Calm variants (no motion) ───────── */
+.abg-solid,
+.abg-gradient,
+.abg-halo,
+.abg-grain,
+.abg-grid {
+  position: absolute;
+  inset: 0;
+}
+
+.abg-solid {
+  background: hsl(var(--abg-solid));
+}
+
+.abg-gradient {
+  background: linear-gradient(
+    150deg,
+    hsl(var(--abg-bg-0)),
+    hsl(var(--abg-bg-1)) 55%,
+    hsl(var(--abg-accent-soft))
+  );
+}
+
+/* Two soft lights in opposite corners */
+.abg-halo {
+  background:
+    radial-gradient(
+      70vmax 55vmax at 12% -5%,
+      hsl(var(--abg-tone-2) / 0.3),
+      transparent 70%
+    ),
+    radial-gradient(
+      60vmax 45vmax at 95% 105%,
+      hsl(var(--abg-accent) / 0.16),
+      transparent 70%
+    );
+}
+
+/* Fine noise. White in dark mode, black in light mode (see below). */
+.abg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.07;
+}
+
+.abg-root[data-mode="light"] .abg-grain {
+  filter: invert(1);
+  opacity: 0.1;
+}
+
+/* Thin grid that fades out toward the edges */
+.abg-grid {
+  background-image:
+    linear-gradient(hsl(var(--abg-tone-2) / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--abg-tone-2) / 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    #000 30%,
+    transparent 85%
+  );
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
+}
+
+/* ───────── Reduced motion ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .abg-root *,
+  .abg-layer {
+    animation: none !important;
+  }
+
+  .abg-bubble {
+    bottom: var(--abg-rest);
+    opacity: 0.6;
+  }
+
+  .abg-ring {
+    opacity: 0.25;
+    transform: translate(-50%, -50%) scale(calc(0.25 + var(--abg-i) * 0.2));
+  }
+
+  .abg-shape {
+    transform: rotate(var(--abg-r0));
+  }
+}

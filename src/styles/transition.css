@@ -1,0 +1,139 @@
+/* ============================================================
+ * Tab transitions: native-style pan (both pages move together).
+ *
+ * Every rule is scoped to html[data-transition-scope="tab"], which
+ * components/layout/tab-transition.ts sets only while a tab switch is
+ * animating. Outside of it, no element gets a view-transition-name.
+ * ============================================================ */
+
+:root {
+  --tab-transition-duration: 360ms;
+  --tab-transition-easing: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* --- Participants ---------------------------------------------------- */
+
+html[data-transition-scope="tab"] [data-slot="app-content"] {
+  view-transition-name: tab-content;
+}
+
+/* Navigation gets its own group so the sliding pages never paint over it. */
+html[data-transition-scope="tab"] [data-slot="navigation-bar"],
+html[data-transition-scope="tab"] [data-slot="floating-navigation-bar"] {
+  view-transition-name: app-navigation;
+}
+
+html[data-transition-scope="tab"] [data-slot="nav-style-switcher"] {
+  view-transition-name: nav-style-switcher;
+}
+
+/* --- Layering --------------------------------------------------------- */
+
+/* Clip the pan to the content area so it cannot cross the navigation. */
+html[data-transition-scope="tab"]::view-transition-group(tab-content) {
+  overflow: clip;
+  animation-duration: var(--tab-transition-duration);
+  animation-timing-function: var(--tab-transition-easing);
+}
+
+html[data-transition-scope="tab"]::view-transition-group(app-navigation) {
+  z-index: 1;
+}
+
+html[data-transition-scope="tab"]::view-transition-group(nav-style-switcher) {
+  z-index: 2;
+}
+
+/* --- Static elements: show only the live new state, without animation --- */
+
+html[data-transition-scope="tab"]::view-transition-old(root),
+html[data-transition-scope="tab"]::view-transition-old(app-navigation),
+html[data-transition-scope="tab"]::view-transition-old(nav-style-switcher) {
+  display: none;
+}
+
+html[data-transition-scope="tab"]::view-transition-new(root),
+html[data-transition-scope="tab"]::view-transition-new(app-navigation),
+html[data-transition-scope="tab"]::view-transition-new(nav-style-switcher) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* --- Content pan ------------------------------------------------------ */
+
+/*
+ * Both pages share the same duration and easing, so they stay exactly
+ * 100% apart and move as one strip. Each movement has its own keyframes
+ * instead of animation-direction: reverse, which would mirror the easing.
+ * Keep the "tab-slide" prefix: tab-transition.ts matches on it.
+ */
+
+@keyframes tab-slide-in-from-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes tab-slide-out-to-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes tab-slide-in-from-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes tab-slide-out-to-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+html[data-transition-scope="tab"]::view-transition-old(tab-content),
+html[data-transition-scope="tab"]::view-transition-new(tab-content) {
+  mix-blend-mode: normal;
+  animation-duration: var(--tab-transition-duration);
+  animation-timing-function: var(--tab-transition-easing);
+  animation-fill-mode: both;
+}
+
+/* Forward: the strip moves left, the new page follows from the right. */
+html[data-transition-scope="tab"][data-transition-direction="forward"]::view-transition-old(
+    tab-content
+  ) {
+  animation-name: tab-slide-out-to-left;
+}
+
+html[data-transition-scope="tab"][data-transition-direction="forward"]::view-transition-new(
+    tab-content
+  ) {
+  animation-name: tab-slide-in-from-right;
+}
+
+/* Backward: the strip moves right, the new page follows from the left. */
+html[data-transition-scope="tab"][data-transition-direction="backward"]::view-transition-old(
+    tab-content
+  ) {
+  animation-name: tab-slide-out-to-right;
+}
+
+html[data-transition-scope="tab"][data-transition-direction="backward"]::view-transition-new(
+    tab-content
+  ) {
+  animation-name: tab-slide-in-from-left;
+}

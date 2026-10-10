@@ -1,0 +1,175 @@
+# REACT & TYPESCRIPT PRODUCTION ARCHITECTURE RULES (OPTIMIZED FOR LOCAL AI)
+
+## 1. GENERAL PRINCIPLES & NAMING CONVENTIONS
+
+- Language: Produce code, types, and inline comments strictly in clean English.
+- Path Aliases: ALWAYS use `@/` alias for imports originating from `src/` (e.g., `@/components/ui/Button`, `@/features/auth/api/auth.service`). NEVER use relative paths like `../../`.
+- Strict File & Folder Naming:
+  - Feature Folders: `kebab-case` (e.g., `user-profile`, `shopping-cart`)
+  - Components: `PascalCase.tsx` (e.g., `Button.tsx`, `UserProfileCard.tsx`)
+  - Hooks: `camelCase.ts` starting with `use` (e.g., `useUser.ts`, `useAuth.ts`)
+  - API Files: `camelCase.ts` with suffix (e.g., `user.service.ts`, `user.schema.ts`, `user.adapter.ts`)
+  - Types / Interfaces: `PascalCase` (e.g., `UserDomain`, `UserApiDTO`)
+
+---
+
+## 2. PROJECT ARCHITECTURE & DIRECTORY LAYOUT
+
+Every file MUST be placed strictly within its designated folder level:
+
+```text
+src/
+├── components/          # Generic, domain-agnostic UI Design System
+│   └── ui/             # Atomic components (Button.tsx, Input.tsx, Modal.tsx, Card.tsx)
+├── features/            # Business domain modules
+│   └── <feature_name>/
+│       ├── api/        # Feature API layer (schemas, adapters, services, queries, mutations)
+│       ├── components/ # UI components specific ONLY to this feature
+│       ├── hooks/      # Business logic & state custom hooks for this feature
+│       ├── types/      # Domain-specific TypeScript types/interfaces
+│       └── utils/      # Pure helper functions specific to this feature
+├── hooks/               # Domain-agnostic global React hooks (e.g., useDebounce, useMediaQuery)
+├── lib/                 # Third-party library configs (apiClient.ts, queryClient.ts)
+├── services/            # Truly global cross-feature services (e.g., session.service.ts)
+├── types/               # Global TypeScript definitions shared across multiple features
+└── utils/               # Pure global helper functions (formatting, validation helpers)
+```
+
+---
+
+## 3. ANTI-DUPLICATION & COMPOSITION PROTOCOL
+
+- UI Check First: BEFORE creating any new UI element or JSX component, inspect `@/components/ui/`.
+
+- Extend via Props: ALWAYS reuse or extend primitives in `@/components/ui/` using component props. NEVER write inline HTML tags with raw Tailwind classes if a UI primitive exists.
+
+- Extract Common Primitives: If a UI component in a feature folder becomes reusable across features, immediately move it to `@/components/ui/`.
+
+- Deduplicate Logic: Never duplicate business logic. Extract repeated state or side effects into custom hooks in `@/hooks/` or `@/features/<feature>/hooks/`.
+
+---
+
+## 4. COMPONENT & CODE STANDARDS (REACT 19 + REACT COMPILER)
+
+- Single Responsibility: One component per file. Maximum ~120 lines per file. If larger, split into sub-components or custom hooks.
+
+- Separation of Concerns: Components handle presentation ONLY. Delegate state management, side-effects, and API calls to custom hooks.
+
+- React Compiler Optimization:
+  - DO NOT use `useCallback`, `useMemo`, or `React.memo`. React Compiler handles memoization automatically at build time.
+
+- React 19 Ref Handling:
+  - DO NOT use `React.forwardRef`. In React 19, `ref` is passed as a standard prop directly to function components.
+
+- Strict TypeScript Rules:
+  - NO `any` or `unknown` without explicit type guards.
+
+  - Prefer `type Props = React.ComponentProps<'tag'> & { ... }` or explicit `interface Props`.
+
+  - ALWAYS export types used by components.
+
+- Component Pattern Example (React 19):
+
+```TypeScript
+import { type ComponentProps } from 'react';
+import { cn } from '@/lib/utils';
+
+export type ButtonProps = ComponentProps<'button'> & {
+  variant?: 'primary' | 'secondary';
+};
+
+export function Button({ className, variant = 'primary', children, ref, ...props }: ButtonProps) {
+  return (
+    <button ref={ref} className={cn('base-btn-styles', variant === 'primary' && 'bg-blue-600', className)} {...props}>
+      {children}
+    </button>
+  );
+}
+```
+
+- Exports: Use named exports (`export function ComponentName() {}`). NEVER use default exports (`export default`).
+
+---
+
+## 5. FORM HANDLING & VALIDATION
+
+- ALWAYS use `react-hook-form` paired with `@hookform/resolvers/zod` for forms.
+
+- Define form validation schemas in `<feature>.schemas.ts` using Zod and infer input types:
+  `type FormInput = z.infer<typeof formSchema>`;
+
+---
+
+## 6. API LAYER & ARCHITECTURE (TANSTACK QUERY + ZOD + ADAPTERS)
+
+All API integrations MUST follow this 5-layer pipeline:
+
+1. `@/lib/apiClient.ts`: Global HTTP client handling base URL, authorization headers, and HTTP 401 interception.
+
+2. `<feature>.schemas.ts`: Zod validation schemas matching exact raw backend payloads (DTOs).
+
+3. `<feature>.adapter.ts`: Pure mapping functions converting API DTOs into clean internal domain models.
+
+4. `<feature>.service.ts`: Async functions calling apiClient, validating raw data with Zod, and returning adapted domain models.
+
+5. `<feature>.queries.ts` & `<feature>.mutations.ts`: Custom TanStack Query hooks.
+
+Adapter Example Pattern:
+
+```TypeScript
+// <feature>.adapter.ts
+export function adaptUserApiToDomain(dto: UserApiDTO): UserDomain {
+  return {
+    id: dto.user_id,
+    fullName: `${dto.first_name} ${dto.last_name}`,
+    createdAt: new Date(dto.created_at),
+  };
+}
+```
+
+---
+
+## 7. QUERY VS MUTATION EXECUTION RULES
+
+- `useQuery` (Reads): Use strictly for READ operations (GET) that subscribe UI to server state.
+
+- `useMutation` (Writes): Use strictly for state modifications (POST, PUT, PATCH, DELETE).
+  - Always invalidate relevant query keys inside `useMutation.onSuccess` using `queryClient.invalidateQueries({ queryKey: [...] })`.
+
+- Lazy Fetches: For on-demand GET requests (e.g., validate coupon on button click), use `useQuery` with `{ enabled: false }` and call `refetch()`.
+
+- Dynamic Filtering: Include filter dependencies in the `queryKey` array (`queryKey: ['entity', filterState]`). NEVER trigger manual `refetch()` calls to update filtered lists.
+
+---
+
+## 8. STRICT NEGATIVE CONSTRAINTS (DO NOT DO)
+
+- DO NOT use `useCallback`, `useMemo`, or `React.memo` (React Compiler handles memoization).
+
+- DO NOT use `React.forwardRef` (React 19 passes `ref` as a standard prop).
+
+- DO NOT use placeholders like `// ... rest of the code` or `// TODO.` ALWAYS output complete, fully functional files.
+
+- DO NOT use `useEffect` for data fetching or derived state calculation.
+
+- DO NOT use relative path imports (`../../..`). ALWAYS use `@/`.
+
+- DO NOT use `export default`. ALWAYS use named exports.
+
+- DO NOT write inline type declarations inside component argument lists; define an explicit type/interface.
+
+- DO NOT call `apiClient` or `fetch` directly inside React components or custom UI hooks.
+
+- DO NOT write unvalidated API responses directly into React state without Zod schema parsing.
+
+---
+
+## 9. AI RESPONSE MANDATES
+
+When answering or generating code for this repository:
+
+1. State explicitly which existing UI primitives (`@/components/ui/`) or custom hooks are being reused.
+
+2. Provide precise folder paths for all new or modified files using the `@/` convention.
+
+3. Enforce decoupling: Keep JSX strictly focused on presentation and delegate state/effects to custom hooks.
