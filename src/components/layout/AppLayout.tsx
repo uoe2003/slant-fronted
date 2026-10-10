@@ -3,12 +3,9 @@ import { Outlet } from "react-router";
 import { NavigationBar } from "../../features/NavigationBar";
 import { Background } from "../Background";
 import { useSettingsStore } from "@/features/Settings/store";
-import { THEME_COLORS } from "@/features/Settings/consts/ThemeColors";
 
 export function AppLayout() {
   const mainBackground = useSettingsStore((s) => s.mainBackground);
-  const themeColor = useSettingsStore((s) => s.themeColor);
-  const theme = useSettingsStore((s) => s.theme);
 
   return (
     <>

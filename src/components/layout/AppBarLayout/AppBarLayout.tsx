@@ -5,7 +5,6 @@ import { useRouteHandle } from "@/routers/routeHandle";
 import { AppBarSlotContext } from "./AppBarSlotContext";
 import { Background } from "@/components/Background";
 import { useSettingsStore } from "@/features/Settings/store";
-import { THEME_COLORS } from "@/features/Settings/consts/ThemeColors";
 
 export function AppBarLayout() {
   const navigate = useNavigate();
@@ -13,8 +12,6 @@ export function AppBarLayout() {
   const [actionsSlot, setActionsSlot] = useState<HTMLElement | null>(null);
 
   const secondaryBackground = useSettingsStore((s) => s.secondaryBackground);
-  const themeColor = useSettingsStore((s) => s.themeColor);
-  const theme = useSettingsStore((s) => s.theme);
 
   const handleBack = () => {
     // React Router stores the history position in `idx`; 0 means there is nowhere to go back to

@@ -60,7 +60,7 @@ export function SettingsRow({
           <div className="mb-2 flex items-baseline justify-between gap-4">
             {text}
             {value && (
-              <span className="text-sm text-cyan-300 tabular-nums">
+              <span className="text-sm text-theme-300 tabular-nums">
                 {value}
               </span>
             )}

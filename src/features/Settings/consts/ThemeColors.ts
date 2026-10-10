@@ -1,7 +1,6 @@
 import type { ColorOption } from "../components/ColorSelector";
 
 export const THEME_COLORS = [
-  "grayscale",
   "red",
   "orange",
   "amber",
@@ -28,6 +27,7 @@ export const THEME_COLORS = [
   "mauve",
   "mist",
   "olive",
+  "grayscale",
 ] as const;
 
 export const THEME_COLORS_OPTIONS: ColorOption<string>[] = THEME_COLORS.map(

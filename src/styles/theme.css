@@ -15,6 +15,22 @@
   --color-theme-950: var(--theme-950);
 }
 
+/* Custom Colors */
+
+@theme {
+  --color-grayscale-50: #ffffff;
+  --color-grayscale-100: #f3f4f6;
+  --color-grayscale-200: #e5e5e5;
+  --color-grayscale-300: #d4d4d4;
+  --color-grayscale-400: #a3a3a3;
+  --color-grayscale-500: #737373;
+  --color-grayscale-600: #525252;
+  --color-grayscale-700: #404040;
+  --color-grayscale-800: #262626;
+  --color-grayscale-900: #171717;
+  --color-grayscale-950: #000000;
+}
+
 /* Valor por defecto inicial */
 :root,
 [data-palette="blue"] {
@@ -33,17 +49,17 @@
 
 /* --- Grayscale --- */
 [data-palette="grayscale"] {
-  --theme-50: #ffffff;
-  --theme-100: #f3f4f6;
-  --theme-200: #e5e5e5;
-  --theme-300: #d4d4d4;
-  --theme-400: #a3a3a3;
-  --theme-500: #737373;
-  --theme-600: #525252;
-  --theme-700: #404040;
-  --theme-800: #262626;
-  --theme-900: #171717;
-  --theme-950: #000000;
+  --theme-50: var(--color-grayscale-50);
+  --theme-100: var(--color-grayscale-100);
+  --theme-200: var(--color-grayscale-200);
+  --theme-300: var(--color-grayscale-300);
+  --theme-400: var(--color-grayscale-400);
+  --theme-500: var(--color-grayscale-500);
+  --theme-600: var(--color-grayscale-600);
+  --theme-700: var(--color-grayscale-700);
+  --theme-800: var(--color-grayscale-800);
+  --theme-900: var(--color-grayscale-900);
+  --theme-950: var(--color-grayscale-950);
 }
 
 /* --- Tailwind Official colors --- */

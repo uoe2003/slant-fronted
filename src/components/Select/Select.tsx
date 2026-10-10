@@ -33,39 +33,56 @@ export interface SelectProps<T extends string> extends SelectBaseProps {
 }
 
 const triggerStyles = cn(
-  // Altura: shadcn la fija con data-[size=default]:h-*, que gana a un `h-10` normal.
   "h-10 data-[size=default]:h-10",
-  // Mismo aspecto que el <select> nativo: chevron a 12px del borde y 8px de separación
-  "max-w-44 gap-2 rounded-full py-0 pr-3 pl-4 shadow-none",
-  // `dark:` se repite porque shadcn define dark:bg-input/30 y dark:hover:bg-input/50
-  "border border-white/10 bg-white/6 dark:bg-white/6 dark:hover:bg-white/6",
-  "text-sm font-medium text-slate-100 data-placeholder:text-slate-400",
-  "[&_svg]:size-4 [&_svg]:text-slate-400 [&_svg]:opacity-100",
-  "scheme-dark focus-visible:border-white/10 focus-visible:ring-0",
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300",
+  "max-w-44 cursor-pointer gap-2 rounded-full py-0 pr-3 pl-4 shadow-none",
+  "transition-colors",
+  "border border-theme-950/10 bg-theme-950/5",
+  "text-sm font-medium text-theme-900 data-placeholder:text-theme-600",
+  // Keep the hover look while the menu is open (Radix / Base UI)
+  "hover:border-theme-950/20 hover:bg-theme-950/10",
+  "data-[state=open]:bg-theme-950/10 data-popup-open:bg-theme-950/10",
+  "dark:border-theme-50/10 dark:bg-theme-50/6",
+  "dark:text-theme-100 dark:data-placeholder:text-theme-400",
+  "dark:hover:border-theme-50/20 dark:hover:bg-theme-50/10",
+  "dark:data-[state=open]:bg-theme-50/10 dark:data-popup-open:bg-theme-50/10",
+  "[&_svg]:size-4 [&_svg]:text-theme-600 [&_svg]:opacity-100",
+  "dark:[&_svg]:text-theme-400",
+  "scheme-light dark:scheme-dark",
+  "focus-visible:border-theme-950/10 focus-visible:ring-0",
+  "dark:focus-visible:border-theme-50/10",
+  "focus-visible:outline-2 focus-visible:outline-offset-2",
+  "focus-visible:outline-theme-600 dark:focus-visible:outline-theme-300",
 );
 
 const contentStyles = cn(
   "min-w-40 rounded-2xl p-1.5",
-  // Gris neutro translúcido + blur (sin tinte azul)
-  "border border-white/10 bg-neutral-800/50 backdrop-blur-xl",
-  "text-neutral-100 shadow-2xl shadow-black/40 ring-0",
-  // Flechas de scroll arriba/abajo: shadcn les pone bg-popover (blanco en tema claro)
-  "[&_[data-slot^=select-scroll]]:bg-transparent [&_[data-slot^=select-scroll]]:text-neutral-400",
+  "border border-theme-950/10 bg-theme-50/70 backdrop-blur-xl",
+  "dark:border-theme-50/10 dark:bg-theme-950/60",
+  "text-theme-900 shadow-2xl shadow-theme-950/20 ring-0",
+  "dark:text-theme-100 dark:shadow-black/40",
+  // shadcn sets bg-popover and w-full on the scroll arrows; w-full ignores
+  "[&_[data-slot^=select-scroll]]:inset-x-0 [&_[data-slot^=select-scroll]]:w-auto",
+  "[&_[data-slot^=select-scroll]]:flex [&_[data-slot^=select-scroll]]:items-center",
+  "[&_[data-slot^=select-scroll]]:justify-center [&_[data-slot^=select-scroll]]:bg-transparent",
+  "[&_[data-slot^=select-scroll]]:text-theme-600",
+  "dark:[&_[data-slot^=select-scroll]]:text-theme-400",
 );
 
 const itemStyles = cn(
-  // pl-2.5 + p-1.5 del contenido = 16px, igual que el pl-4 del trigger:
-  // el texto queda alineado con el del trigger al abrir.
-  "cursor-pointer rounded-xl py-2 pr-9 pl-2.5 text-sm text-neutral-300",
+  // pl-2.5 + p-1.5 from the content = 16px, same as the trigger's pl-4
+  "cursor-pointer rounded-xl py-2 pr-9 pl-2.5 text-sm",
+  "text-theme-800 dark:text-theme-200",
   "transition-colors",
-  // Resaltado por teclado o ratón (ambas librerías usan data-highlighted)
-  "focus:bg-white/10 focus:text-white",
-  "data-highlighted:bg-white/10 data-highlighted:text-white",
-  // Seleccionado: solo cambia el color, sin cambiar el peso (evita saltos de ancho)
-  "data-selected:text-white data-[state=checked]:text-white",
-  // Icono de check
-  "[&_svg]:text-neutral-100",
+  "hover:bg-theme-950/10 hover:text-theme-950",
+  "focus:bg-theme-950/10 focus:text-theme-950",
+  "data-highlighted:bg-theme-950/10 data-highlighted:text-theme-950",
+  "dark:hover:bg-theme-50/10 dark:hover:text-theme-50",
+  "dark:focus:bg-theme-50/10 dark:focus:text-theme-50",
+  "dark:data-highlighted:bg-theme-50/10 dark:data-highlighted:text-theme-50",
+  // Color only, no font-weight change (avoids width jumps)
+  "data-selected:text-theme-950 data-[state=checked]:text-theme-950",
+  "dark:data-selected:text-theme-50 dark:data-[state=checked]:text-theme-50",
+  "[&_svg]:text-theme-900 dark:[&_svg]:text-theme-100",
   "data-disabled:opacity-40",
 );
 
