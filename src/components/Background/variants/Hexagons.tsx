@@ -1,4 +1,5 @@
 import { memo, useId } from "react";
+import { withAlpha } from "../utils";
 
 /* Tile of 2A × 3S (pointy-top hexagons with side S). It holds one full
  * hexagon and the vertical edge that links to the next row. Neighbor tiles
@@ -23,7 +24,7 @@ const HEX_PATH = [
 
 interface HexLayerProps {
   className: string;
-  /** Stroke opacity. */
+  /** Stroke opacity (0-1). */
   alpha: number;
   /** Palette tone (0-4). */
   tone: 0 | 1 | 2 | 3 | 4;
@@ -46,7 +47,7 @@ function HexLayer({ className, alpha, tone }: HexLayerProps) {
             d={HEX_PATH}
             fill="none"
             strokeWidth={1}
-            style={{ stroke: `hsl(var(--abg-tone-${tone}) / ${alpha})` }}
+            style={{ stroke: withAlpha(`var(--abg-tone-${tone})`, alpha) }}
           />
         </pattern>
       </defs>

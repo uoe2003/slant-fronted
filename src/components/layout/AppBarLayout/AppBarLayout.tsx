@@ -25,11 +25,7 @@ export function AppBarLayout() {
 
   return (
     <>
-      <Background
-        variant={secondaryBackground}
-        color={THEME_COLORS[themeColor].value}
-        mode={theme === "system" ? undefined : theme}
-      />
+      <Background variant={secondaryBackground} />
       <AppBarSlotContext.Provider value={actionsSlot}>
         <div className="relative isolate flex h-dvh flex-col text-slate-100">
           <AppBar

@@ -12,11 +12,7 @@ export function AppLayout() {
 
   return (
     <>
-      <Background
-        variant={mainBackground}
-        color={THEME_COLORS[themeColor].value}
-        mode={theme === "system" ? undefined : theme}
-      />
+      <Background variant={mainBackground} />
       <div className="relative flex h-full w-full flex-col overflow-hidden text-foreground lg:flex-row">
         <main
           data-slot="app-content"

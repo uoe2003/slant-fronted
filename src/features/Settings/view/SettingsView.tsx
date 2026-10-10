@@ -33,7 +33,7 @@ export function SettingsView() {
         <button
           type="button"
           onClick={resetSettings}
-          className="h-10 rounded-full px-4 text-sm font-medium text-cyan-300 hover:bg-white/10 active:bg-white/15"
+          className="h-10 rounded-full px-4 text-sm font-medium text-theme-300 hover:bg-white/10 active:bg-white/15"
         >
           Restablecer
         </button>

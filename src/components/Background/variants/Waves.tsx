@@ -38,12 +38,84 @@ interface WaveConfig {
 
 /* Drawing order: back to front. Each side has 3 nested bands. */
 const WAVES: readonly WaveConfig[] = [
-  { side: "top", surface: 1, rest: 22, amplitude: 3, ripple: 0.3, phase: 0.6, width: 220, slide: 90, reverse: false, bob: 0.8, bobDuration: 14 },
-  { side: "bottom", surface: 1, rest: 25, amplitude: 2.8, ripple: 0.3, phase: 2.2, width: 240, slide: 80, reverse: true, bob: 0.9, bobDuration: 16 },
-  { side: "top", surface: 2, rest: 16, amplitude: 1.8, ripple: 0.35, phase: 2.9, width: 200, slide: 70, reverse: true, bob: 0.6, bobDuration: 11 },
-  { side: "bottom", surface: 2, rest: 14, amplitude: 2, ripple: 0.3, phase: 1.3, width: 260, slide: 62, reverse: false, bob: 0.7, bobDuration: 13 },
-  { side: "top", surface: 3, rest: 8, amplitude: 1.2, ripple: 0.3, phase: 4.1, width: 280, slide: 56, reverse: false, bob: 0.4, bobDuration: 10 },
-  { side: "bottom", surface: 3, rest: 3, amplitude: 1.3, ripple: 0.3, phase: 5.2, width: 300, slide: 50, reverse: true, bob: 0.4, bobDuration: 12 },
+  {
+    side: "top",
+    surface: 1,
+    rest: 22,
+    amplitude: 3,
+    ripple: 0.3,
+    phase: 0.6,
+    width: 220,
+    slide: 90,
+    reverse: false,
+    bob: 0.8,
+    bobDuration: 14,
+  },
+  {
+    side: "bottom",
+    surface: 1,
+    rest: 25,
+    amplitude: 2.8,
+    ripple: 0.3,
+    phase: 2.2,
+    width: 240,
+    slide: 80,
+    reverse: true,
+    bob: 0.9,
+    bobDuration: 16,
+  },
+  {
+    side: "top",
+    surface: 2,
+    rest: 16,
+    amplitude: 1.8,
+    ripple: 0.35,
+    phase: 2.9,
+    width: 200,
+    slide: 70,
+    reverse: true,
+    bob: 0.6,
+    bobDuration: 11,
+  },
+  {
+    side: "bottom",
+    surface: 2,
+    rest: 14,
+    amplitude: 2,
+    ripple: 0.3,
+    phase: 1.3,
+    width: 260,
+    slide: 62,
+    reverse: false,
+    bob: 0.7,
+    bobDuration: 13,
+  },
+  {
+    side: "top",
+    surface: 3,
+    rest: 8,
+    amplitude: 1.2,
+    ripple: 0.3,
+    phase: 4.1,
+    width: 280,
+    slide: 56,
+    reverse: false,
+    bob: 0.4,
+    bobDuration: 10,
+  },
+  {
+    side: "bottom",
+    surface: 3,
+    rest: 3,
+    amplitude: 1.3,
+    ripple: 0.3,
+    phase: 5.2,
+    width: 300,
+    slide: 50,
+    reverse: true,
+    bob: 0.4,
+    bobDuration: 12,
+  },
 ];
 
 /**
@@ -113,7 +185,7 @@ export const Waves = memo(function Waves() {
           >
             <path
               d={path}
-              style={{ fill: `hsl(var(--abg-surface-${config.surface}))` }}
+              style={{ fill: `var(--abg-surface-${config.surface})` }}
             />
           </svg>
         </div>

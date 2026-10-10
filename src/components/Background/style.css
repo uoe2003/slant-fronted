@@ -1,8 +1,11 @@
 /* ════════════════════════════════════════════════════════════════
    Background styles
    All classes use the "abg-" prefix to avoid collisions.
-   Colors come from CSS variables set by palette.ts. They are "H S% L%",
-   so use them like this: hsl(var(--abg-tone-2) / 0.4)
+   Colors come from tokens.css, which maps Tailwind's --color-theme-*
+   scale to the variables below. They are complete colors, so for
+   opacity use color-mix:
+
+     color-mix(in oklab, var(--abg-tone-2) 40%, transparent)
 
      bg-0, bg-1        page gradient
      solid             flat color
@@ -18,17 +21,13 @@
 
 /* ───────── Base ───────── */
 .abg-root {
-  /* Does not depend on Tailwind */
+  /* Does not depend on Tailwind utilities */
   position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(
-    165deg,
-    hsl(var(--abg-bg-0)),
-    hsl(var(--abg-bg-1))
-  );
+  background: linear-gradient(165deg, var(--abg-bg-0), var(--abg-bg-1));
 }
 
 /* Fade-in when mounting or changing variant */
@@ -80,7 +79,7 @@
 .abg-wave-base {
   position: absolute;
   inset: 0;
-  background: hsl(var(--abg-surface-0));
+  background: var(--abg-surface-0);
 }
 
 /* The layer moves up and down; the svg inside drifts sideways */
@@ -132,7 +131,7 @@
 .abg-dots {
   background-image: radial-gradient(
     circle,
-    hsl(var(--abg-tone-3) / 0.14) 0.8px,
+    color-mix(in oklab, var(--abg-tone-3) 14%, transparent) 0.8px,
     transparent 1.2px
   );
 }
@@ -140,7 +139,7 @@
 .abg-dots-glow {
   background-image: radial-gradient(
     circle,
-    hsl(var(--abg-tone-3) / 0.75) 0.8px,
+    color-mix(in oklab, var(--abg-tone-3) 75%, transparent) 0.8px,
     transparent 1.2px
   );
 }
@@ -170,10 +169,10 @@
   border-radius: 9999px;
   background: radial-gradient(
     circle at 30% 30%,
-    hsl(var(--abg-tone-3) / 0.35),
-    hsl(var(--abg-tone-2) / 0.08)
+    color-mix(in oklab, var(--abg-tone-3) 35%, transparent),
+    color-mix(in oklab, var(--abg-tone-2) 8%, transparent)
   );
-  border: 1px solid hsl(var(--abg-tone-3) / 0.25);
+  border: 1px solid color-mix(in oklab, var(--abg-tone-3) 25%, transparent);
   opacity: 0;
   will-change: transform, opacity;
   animation: abg-rise linear infinite;
@@ -206,7 +205,7 @@
   transform: translate(-50%, -50%);
   background: radial-gradient(
     circle,
-    hsl(var(--abg-tone-2) / 0.3),
+    color-mix(in oklab, var(--abg-tone-2) 30%, transparent),
     transparent 65%
   );
   animation: abg-pulse 9s ease-in-out infinite alternate;
@@ -228,7 +227,7 @@
   width: 140vmax;
   height: 140vmax;
   border-radius: 9999px;
-  border: 2px solid hsl(var(--abg-tone-3) / 0.3);
+  border: 2px solid color-mix(in oklab, var(--abg-tone-3) 30%, transparent);
   opacity: 0;
   will-change: transform, opacity;
   animation: abg-ring 12s ease-out infinite;
@@ -253,15 +252,17 @@
 .abg-star {
   position: absolute;
   border-radius: 9999px;
-  background: hsl(var(--abg-tone-4));
-  box-shadow: 0 0 calc(var(--abg-s) * 3) hsl(var(--abg-tone-4) / 0.5);
+  background: var(--abg-tone-4);
+  box-shadow: 0 0 calc(var(--abg-s) * 3)
+    color-mix(in oklab, var(--abg-tone-4) 50%, transparent);
   opacity: var(--abg-hi);
   animation: abg-twinkle ease-in-out infinite alternate;
 }
 
 .abg-star--accent {
-  background: hsl(var(--abg-accent));
-  box-shadow: 0 0 calc(var(--abg-s) * 3) hsl(var(--abg-accent) / 0.5);
+  background: var(--abg-accent);
+  box-shadow: 0 0 calc(var(--abg-s) * 3)
+    color-mix(in oklab, var(--abg-accent) 50%, transparent);
 }
 
 @keyframes abg-twinkle {
@@ -278,7 +279,11 @@
   position: absolute;
   width: 90px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, hsl(var(--abg-tone-4) / 0.9));
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--abg-tone-4) 90%, transparent)
+  );
   opacity: 0;
   animation: abg-shoot linear infinite;
 }
@@ -327,7 +332,8 @@
 
 /* ───────── Stripes ───────── */
 /* Oversized, rotated box with soft vertical bands. The bands move exactly
-   one period (--abg-period), so the loop has no jump. */
+   one period (--abg-period), so the loop has no jump.
+   --abg-stripe is the band color (with opacity), set from Stripes.tsx. */
 .abg-stripes {
   position: absolute;
   inset: -45%;
@@ -349,7 +355,7 @@
   background: repeating-linear-gradient(
     90deg,
     transparent 0,
-    hsl(var(--abg-tone-2) / var(--abg-alpha)) calc(var(--abg-period) / 2),
+    var(--abg-stripe) calc(var(--abg-period) / 2),
     transparent var(--abg-period)
   );
   will-change: transform;
@@ -376,15 +382,15 @@
 }
 
 .abg-solid {
-  background: hsl(var(--abg-solid));
+  background: var(--abg-solid);
 }
 
 .abg-gradient {
   background: linear-gradient(
     150deg,
-    hsl(var(--abg-bg-0)),
-    hsl(var(--abg-bg-1)) 55%,
-    hsl(var(--abg-accent-soft))
+    var(--abg-bg-0),
+    var(--abg-bg-1) 55%,
+    var(--abg-accent-soft)
   );
 }
 
@@ -393,33 +399,37 @@
   background:
     radial-gradient(
       70vmax 55vmax at 12% -5%,
-      hsl(var(--abg-tone-2) / 0.3),
+      color-mix(in oklab, var(--abg-tone-2) 30%, transparent),
       transparent 70%
     ),
     radial-gradient(
       60vmax 45vmax at 95% 105%,
-      hsl(var(--abg-accent) / 0.16),
+      color-mix(in oklab, var(--abg-accent) 16%, transparent),
       transparent 70%
     );
 }
 
-/* Fine noise. White in dark mode, black in light mode (see below). */
+/* Fine noise. The color (white/black) and opacity change with the mode:
+   see --abg-grain-filter and --abg-grain-opacity in tokens.css. */
 .abg-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 160px 160px;
-  opacity: 0.07;
-}
-
-.abg-root[data-mode="light"] .abg-grain {
-  filter: invert(1);
-  opacity: 0.1;
+  filter: var(--abg-grain-filter);
+  opacity: var(--abg-grain-opacity);
 }
 
 /* Thin grid that fades out toward the edges */
 .abg-grid {
   background-image:
-    linear-gradient(hsl(var(--abg-tone-2) / 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(var(--abg-tone-2) / 0.1) 1px, transparent 1px);
+    linear-gradient(
+      color-mix(in oklab, var(--abg-tone-2) 10%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--abg-tone-2) 10%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 40px 40px;
   background-position: center;
   -webkit-mask-image: radial-gradient(

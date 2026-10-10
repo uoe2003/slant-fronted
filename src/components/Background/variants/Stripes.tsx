@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { withVars } from "../utils";
+import { withAlpha, withVars } from "../utils";
 
 /**
  * Two layers of bands with different period, opacity and speed,
@@ -19,7 +19,7 @@ export const Stripes = memo(function Stripes() {
           className="abg-stripes-inner"
           style={withVars({
             "--abg-period": `${layer.period}px`,
-            "--abg-alpha": layer.alpha,
+            "--abg-stripe": withAlpha("var(--abg-tone-2)", layer.alpha),
             "--abg-dur": `${layer.duration}s`,
             animationDirection: layer.reverse ? "reverse" : "normal",
           })}

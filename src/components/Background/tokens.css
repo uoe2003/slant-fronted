@@ -1,0 +1,106 @@
+/* ════════════════════════════════════════════════════════════════
+   Background tokens
+
+   Everything the background paints comes from Tailwind's theme scale
+   (--color-theme-50 … --color-theme-950). This is the first place to
+   touch when a background has too much or too little contrast.
+
+   Light mode is the default. Dark mode overrides it under `.dark`
+   (the Tailwind class strategy). If your project switches modes in
+   another way (`[data-theme="dark"]`, media query…), change ONLY the
+   selector of the dark block below.
+
+   Opacity is applied with color-mix, so it works with any color format:
+     color-mix(in oklab, var(--abg-tone-2) 40%, transparent)
+   ════════════════════════════════════════════════════════════════ */
+
+/* ───────── Light (default) ───────── */
+.abg-root {
+  /* Page gradient and flat color */
+  --abg-bg-0: var(--color-theme-50);
+  --abg-bg-1: var(--color-theme-100);
+  --abg-solid: var(--color-theme-100);
+
+  /* Waves: flat layers, from the background (from) to the screen edge (to) */
+  --abg-surface-from: var(--color-theme-100);
+  --abg-surface-to: var(--color-theme-200);
+
+  /* Decoration, from soft (0) to strong (4) */
+  --abg-tone-0: var(--color-theme-200);
+  --abg-tone-1: var(--color-theme-300);
+  --abg-tone-2: var(--color-theme-400);
+  --abg-tone-3: var(--color-theme-500);
+  --abg-tone-4: var(--color-theme-600);
+
+  /* Accent: base colors (the hue shift is applied below) */
+  --abg-accent-base: var(--color-theme-500);
+  --abg-accent-soft-base: var(--color-theme-200);
+  /* Hue shift in degrees. Use 0 to disable it. */
+  --abg-accent-shift: 35;
+
+  /* Grain: black noise on light backgrounds */
+  --abg-grain-filter: invert(1);
+  --abg-grain-opacity: 0.1;
+}
+
+/* ───────── Dark ───────── */
+.dark .abg-root {
+  --abg-deep: color-mix(in oklab, var(--color-theme-950) 60%, black);
+
+  --abg-bg-0: var(--abg-deep);
+  --abg-bg-1: var(--color-theme-950);
+  --abg-solid: var(--color-theme-950);
+
+  /* Waves: from the deep tone to theme-900 (was 900 → 800) */
+  --abg-surface-from: var(--abg-deep);
+  --abg-surface-to: var(--color-theme-900);
+
+  --abg-tone-0: var(--color-theme-800);
+  --abg-tone-1: var(--color-theme-700);
+  --abg-tone-2: var(--color-theme-600);
+  --abg-tone-3: var(--color-theme-500);
+  --abg-tone-4: var(--color-theme-300);
+
+  --abg-accent-base: var(--color-theme-400);
+  --abg-accent-soft-base: var(--color-theme-900);
+
+  /* White noise on dark backgrounds */
+  --abg-grain-filter: none;
+  --abg-grain-opacity: 0.07;
+}
+
+/* ───────── Derived tokens (do not edit) ─────────
+   They are resolved on the same element as the values above, so they
+   follow the light/dark overrides automatically. */
+.abg-root {
+  /* 4 flat steps between "from" and "to" (waves) */
+  --abg-surface-0: var(--abg-surface-from);
+  --abg-surface-1: color-mix(
+    in oklab,
+    var(--abg-surface-to) 33%,
+    var(--abg-surface-from)
+  );
+  --abg-surface-2: color-mix(
+    in oklab,
+    var(--abg-surface-to) 66%,
+    var(--abg-surface-from)
+  );
+  --abg-surface-3: var(--abg-surface-to);
+
+  /* Fallback: same hue as the theme */
+  --abg-accent: var(--abg-accent-base);
+  --abg-accent-soft: var(--abg-accent-soft-base);
+}
+
+/* Browsers with relative colors: accent with a shifted hue for variety */
+@supports (color: oklch(from red l c h)) {
+  .abg-root {
+    --abg-accent: oklch(
+      from var(--abg-accent-base) l c calc(h + var(--abg-accent-shift))
+    );
+    --abg-accent-soft: oklch(
+      from var(--abg-accent-soft-base) l calc(c * 0.7)
+        calc(h + var(--abg-accent-shift))
+    );
+  }
+}
