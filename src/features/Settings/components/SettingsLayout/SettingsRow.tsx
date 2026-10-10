@@ -33,11 +33,11 @@ export function SettingsRow({
 
   const text = (
     <div className="min-w-0">
-      <p id={labelId} className="text-[15px] font-medium text-slate-100">
+      <p id={labelId} className="text-[15px] font-medium text-theme-100">
         {label}
       </p>
       {description && (
-        <p id={descriptionId} className="mt-0.5 text-[13px] text-slate-400">
+        <p id={descriptionId} className="mt-0.5 text-[13px] text-theme-500">
           {description}
         </p>
       )}

@@ -12,11 +12,11 @@ export function SettingsSection({ title, children }: SettingsSectionProps) {
     <section aria-labelledby={headingId} className="space-y-3">
       <h2
         id={headingId}
-        className="px-1 text-sm font-medium tracking-wider text-slate-400 uppercase"
+        className="px-1 text-base font-semibold tracking-wider text-theme-200 uppercase"
       >
         {title}
       </h2>
-      <div className="divide-y divide-white/6 overflow-hidden rounded-2xl border border-white/10 bg-white/4 backdrop-blur-sm">
+      <div className="divide-y divide-theme-50/6 overflow-hidden rounded-2xl border border-theme-50/10 bg-theme-50/4 backdrop-blur-sm">
         {children}
       </div>
     </section>

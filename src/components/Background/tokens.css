@@ -45,13 +45,13 @@
 
 /* ───────── Dark ───────── */
 .dark .abg-root {
-  --abg-deep: color-mix(in oklab, var(--color-theme-950) 60%, black);
+  --abg-deep: var(--color-theme-950);
 
   --abg-bg-0: var(--abg-deep);
   --abg-bg-1: var(--color-theme-950);
   --abg-solid: var(--color-theme-950);
 
-  /* Waves: from the deep tone to theme-900 (was 900 → 800) */
+  /* Waves: from the deep tone to theme-900 */
   --abg-surface-from: var(--abg-deep);
   --abg-surface-to: var(--color-theme-900);
 

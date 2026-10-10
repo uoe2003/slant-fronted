@@ -1,10 +1,11 @@
+import { AppBar } from "@/components/AppBar";
+import { Background } from "@/components/Background";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSettingsStore } from "@/features/Settings/store";
+import { useRouteHandle } from "@/routers/routeHandle";
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router";
-import { AppBar } from "@/components/AppBar";
-import { useRouteHandle } from "@/routers/routeHandle";
 import { AppBarSlotContext } from "./AppBarSlotContext";
-import { Background } from "@/components/Background";
-import { useSettingsStore } from "@/features/Settings/store";
 
 export function AppBarLayout() {
   const navigate = useNavigate();
@@ -14,7 +15,6 @@ export function AppBarLayout() {
   const secondaryBackground = useSettingsStore((s) => s.secondaryBackground);
 
   const handleBack = () => {
-    // React Router stores the history position in `idx`; 0 means there is nowhere to go back to
     const canGoBack = (window.history.state?.idx ?? 0) > 0;
     if (canGoBack) navigate(-1);
     else navigate("/", { replace: true });
@@ -32,10 +32,13 @@ export function AppBarLayout() {
             actions={<div ref={setActionsSlot} className="flex items-center" />}
           />
 
-          <main className="flex-1 overflow-y-auto overscroll-contain pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]">
-            <div className="mx-auto w-full max-w-180 px-6 pt-6 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-              <Outlet />
-            </div>
+          {/* El main ya no hace scroll por sí mismo, cede el control al ScrollArea */}
+          <main className="flex-1 overflow-hidden pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]">
+            <ScrollArea className="h-full w-full">
+              <div className="mx-auto w-full max-w-180 px-6 pt-6 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+                <Outlet />
+              </div>
+            </ScrollArea>
           </main>
         </div>
       </AppBarSlotContext.Provider>
