@@ -1,11 +1,14 @@
 import { Pencil, Settings } from "lucide-react";
 import { Link } from "react-router";
+import { AppButton, appButtonVariants } from "@/components/AppButton";
+import { GlassCard } from "@/components/GlassCard";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { getAvatar } from "../consts/avatars";
 import type { PlayerProfile } from "../types";
 import { formatNumber } from "../utils/format";
+import { getLevelProgress } from "../utils/stats";
 import { LevelRing } from "./LevelRing";
 
 interface ProfileHeaderProps {
@@ -24,20 +27,21 @@ export function ProfileHeader({
   onEdit,
 }: ProfileHeaderProps) {
   const { icon: AvatarIcon } = getAvatar(profile.avatarId);
-  const progress = Math.min(xp / xpToNextLevel, 1);
+  const progress = getLevelProgress(xp, xpToNextLevel);
   const xpMissing = Math.max(xpToNextLevel - xp, 0);
 
   return (
-    <div className="relative rounded-3xl border border-theme-50/10 bg-theme-50/4 px-5 pt-8 pb-5 backdrop-blur-sm">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute top-3 right-3 size-11 rounded-full text-theme-300 hover:bg-theme-50/10 hover:text-theme-300"
+    <GlassCard className="relative rounded-3xl px-5 pt-8 pb-5">
+      <Link
+        to="/settings"
+        aria-label="Ajustes"
+        className={cn(
+          appButtonVariants({ variant: "ghost", size: "icon" }),
+          "absolute top-3 right-3",
+        )}
       >
-        <Link to="/settings" aria-label="Ajustes">
-          <Settings className="size-6" />
-        </Link>
-      </Button>
+        <Settings className="size-6" aria-hidden="true" />
+      </Link>
 
       <div className="flex flex-col items-center text-center">
         <div className="relative">
@@ -70,15 +74,15 @@ export function ProfileHeader({
         </p>
       </div>
 
-      <Button
-        type="button"
-        onClick={onEdit}
+      <AppButton
+        size="lg"
         aria-haspopup="dialog"
-        className="mt-5 h-12 w-full rounded-2xl bg-theme-300 text-[15px] font-semibold text-theme-950 transition hover:bg-theme-200 active:scale-[0.98]"
+        onClick={onEdit}
+        className="mt-5 w-full"
       >
-        <Pencil className="size-[18px]" aria-hidden="true" />
+        <Pencil aria-hidden="true" />
         Editar perfil
-      </Button>
-    </div>
+      </AppButton>
+    </GlassCard>
   );
 }

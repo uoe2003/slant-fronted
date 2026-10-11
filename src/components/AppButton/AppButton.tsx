@@ -7,30 +7,27 @@ import { cn } from "@/lib/utils";
 // Style overrides
 
 const overrides = cva(
-  "gap-2 font-bold active:scale-[0.98] motion-reduce:active:scale-100 data-loading:disabled:opacity-100",
+  "gap-2 font-semibold focus-visible:border-theme-300 focus-visible:ring-theme-300/40 active:scale-[0.98] motion-reduce:active:scale-100 data-loading:disabled:opacity-100",
   {
     variants: {
       variant: {
-        primary: [
-          "bg-theme-600 text-theme-50 shadow-md shadow-theme-600/20 hover:bg-theme-700",
-          "dark:bg-theme-400 dark:text-theme-950 dark:shadow-theme-400/20 dark:hover:bg-theme-300",
-        ],
+        primary: "bg-theme-300 text-theme-950 hover:bg-theme-200",
+        // The dark: classes cancel the shadcn dark defaults for outline and ghost
         secondary: [
-          "bg-theme-100 text-theme-900 hover:bg-theme-200",
-          "dark:bg-theme-900 dark:text-theme-50 dark:hover:bg-theme-800",
+          "border-theme-50/10 bg-theme-50/4 text-theme-100 hover:bg-theme-50/10 hover:text-theme-100",
+          "dark:border-theme-50/10 dark:bg-theme-50/4 dark:hover:bg-theme-50/10",
         ],
-        glass: [
-          "border-theme-200/60 bg-theme-50/60 text-foreground backdrop-blur-sm hover:bg-theme-50/80",
-          "dark:border-theme-800/60 dark:bg-theme-950/60 dark:hover:bg-theme-950/80",
+        ghost: [
+          "text-theme-300 hover:bg-theme-50/10 hover:text-theme-300",
+          "dark:hover:bg-theme-50/10",
         ],
-        ghost: "text-foreground hover:bg-theme-950/5 dark:hover:bg-theme-50/10",
         destructive: "",
       },
       size: {
         sm: "h-9 rounded-xl px-3.5 text-sm",
         md: "h-11 rounded-2xl px-5 text-sm",
-        lg: "h-12 rounded-2xl px-6 text-base [&_svg:not([class*='size-'])]:size-5",
-        icon: "size-10 rounded-full p-0",
+        lg: "h-12 rounded-2xl px-6 text-[15px] [&_svg:not([class*='size-'])]:size-5",
+        icon: "size-11 rounded-full p-0",
         "icon-sm": "size-8 rounded-full p-0",
       },
     },
@@ -57,8 +54,7 @@ interface AppButtonProps extends Omit<ShadcnButtonProps, "variant" | "size"> {
 
 const baseVariant = {
   primary: "default",
-  secondary: "secondary",
-  glass: "outline",
+  secondary: "outline",
   ghost: "ghost",
   destructive: "destructive",
 } as const satisfies Record<

@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AppButton } from "@/components/AppButton";
 import { Drawer, DrawerClose, DrawerContent } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -10,10 +10,8 @@ import { cn } from "@/lib/utils";
 const DESKTOP_QUERY = "(min-width: 768px)";
 
 const contentStyles = [
-  "border-theme-200/60 bg-theme-50/85 shadow-2xl backdrop-blur-sm",
-  "dark:border-theme-800/60 dark:bg-theme-950/85",
-  "[--drawer-bleed-background:var(--color-theme-50)]",
-  "dark:[--drawer-bleed-background:var(--color-theme-950)]",
+  "border-theme-50/10 bg-theme-950/85 text-theme-100 shadow-2xl backdrop-blur-sm",
+  "[--drawer-bleed-background:var(--color-theme-950)]",
   "data-[swipe-direction=down]:rounded-t-3xl",
   "data-[swipe-direction=down]:border-t",
   "data-[swipe-direction=down]:pb-[env(safe-area-inset-bottom,0px)]",
@@ -57,11 +55,11 @@ function AppDrawerContent({
         {showClose && (
           <DrawerClose
             render={
-              <Button
+              <AppButton
                 variant="ghost"
-                size="icon"
+                size="icon-sm"
                 aria-label={closeLabel}
-                className="absolute top-3 right-4 z-10 size-8 rounded-full bg-foreground/10 hover:bg-foreground/15"
+                className="absolute top-3 right-4 z-10 bg-theme-50/10 hover:bg-theme-50/15"
               />
             }
           >
@@ -80,7 +78,7 @@ function AppDrawerBody({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain p-4 pt-6",
+        "flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain p-4",
         className,
       )}
       {...props}
