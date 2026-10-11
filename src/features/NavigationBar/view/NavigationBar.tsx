@@ -10,8 +10,6 @@ import { useTabNavigation } from "../hooks/useTabNavigation";
 import { TABS } from "../components/Tabs";
 import { useSettingsStore } from "@/features/Settings/store";
 
-const FLOATING_ACTIVE_COLOR = "#007AFF";
-
 export function NavigationBar() {
   const { activeTab, selectTab } = useTabNavigation();
 
@@ -33,7 +31,7 @@ export function NavigationBar() {
           ))}
         </FixedNavigationBar>
       ) : (
-        <FloatingNavigationBar activeColor={FLOATING_ACTIVE_COLOR}>
+        <FloatingNavigationBar>
           {TABS.map(({ id, label, icon: Icon }) => (
             <FloatingNavigationItem
               key={id}

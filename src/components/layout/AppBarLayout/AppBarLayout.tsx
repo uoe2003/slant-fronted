@@ -35,7 +35,7 @@ export function AppBarLayout() {
           {/* El main ya no hace scroll por sí mismo, cede el control al ScrollArea */}
           <main className="flex-1 overflow-hidden pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]">
             <ScrollArea className="h-full w-full">
-              <div className="mx-auto w-full max-w-180 px-6 pt-6 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+              <div className="mx-auto w-full max-w-200 px-6 pt-6 pb-[calc(1rem+env(safe-area-inset-bottom))]">
                 <Outlet />
               </div>
             </ScrollArea>

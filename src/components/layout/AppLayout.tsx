@@ -23,7 +23,7 @@ export function AppLayout() {
                 "pb-[calc(7rem+env(safe-area-inset-bottom,0px))]",
               )}
             >
-              <div className="mx-auto w-full max-w-4xl">
+              <div className="mx-auto w-full max-w-200">
                 <Outlet />
               </div>
             </div>
