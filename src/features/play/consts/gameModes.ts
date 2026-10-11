@@ -6,7 +6,7 @@ export const OFFLINE_MODE: GameMode = {
   title: "Modo offline",
   description: "Supera niveles a tu ritmo, sin conexión.",
   icon: Gamepad2,
-  path: "/play/offline",
+  path: "/levels",
   available: true,
 };
 

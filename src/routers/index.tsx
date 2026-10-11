@@ -10,6 +10,7 @@ import {
   GamePage,
   SettingsPage,
 } from "@/pages";
+import { LevelsPage } from "@/pages/LevelsPage";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,11 @@ export const router = createBrowserRouter([
         path: "settings",
         element: <SettingsPage />,
         handle: { title: "Settings" } satisfies RouteHandle,
+      },
+      {
+        path: "levels",
+        element: <LevelsPage />,
+        handle: { title: "Niveles" } satisfies RouteHandle,
       },
     ],
   },
