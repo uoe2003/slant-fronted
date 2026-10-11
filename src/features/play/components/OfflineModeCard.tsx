@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Gamepad2, Play, Star, Trophy } from "lucide-react";
 import { Link } from "react-router";
-import { Progress } from "@/components/ui/progress";
+import {
+  Progress,
+  ProgressLabel,
+  ProgressValue,
+} from "@/components/ui/progress";
 import type { GameMode, OfflineProgress } from "../types";
 import { StatChip } from "./StatChip";
 
@@ -31,33 +35,38 @@ export function OfflineModeCard({ mode, progress }: OfflineModeCardProps) {
   return (
     <Link
       to={mode.path}
-      className="relative block overflow-hidden rounded-3xl border border-theme-50/10 bg-theme-50/4 p-5 backdrop-blur-sm transition active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-theme-300"
+      className="group relative block overflow-hidden rounded-3xl border border-theme-300/20 bg-theme-50/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-theme-300/40 hover:shadow-theme-300/20 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-theme-300"
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-linear-to-br from-theme-300/10 via-transparent to-transparent"
+      />
+
       <Gamepad2
         aria-hidden="true"
-        className="pointer-events-none absolute -right-4 -bottom-6 size-36 -rotate-12 text-theme-50/6"
+        className="pointer-events-none absolute -right-6 -bottom-6 size-48 -rotate-12 text-theme-50/5 transition-transform duration-700 group-hover:scale-110 group-hover:rotate-0 motion-reduce:transition-none"
       />
 
       <div className="relative">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h2 className="text-2xl font-bold tracking-tight text-theme-50">
+            <h2 className="text-3xl font-black tracking-tight text-theme-50">
               {mode.title}
             </h2>
-            <p className="mt-0.5 text-sm text-theme-400">
+            <p className="mt-1 text-sm text-theme-400">
               {levelsCompleted > 0 ? "Continúa" : "Empieza"} en el nivel{" "}
               {currentLevel}
             </p>
           </div>
           <span
             aria-hidden="true"
-            className="grid size-12 shrink-0 place-items-center rounded-full bg-theme-300 text-theme-950"
+            className="shrink-0 rounded-full bg-theme-950/40 p-2.5 ring-1 ring-theme-50/10 transition-colors group-hover:bg-theme-300/15"
           >
-            <Play className="size-5 translate-x-px fill-current" />
+            <Play className="size-5 fill-current text-theme-300 opacity-80" />
           </span>
         </div>
 
-        <div className="mt-4 flex gap-2">
+        <div className="mt-5 flex gap-3">
           <StatChip
             icon={Trophy}
             value={levelsCompleted}
@@ -66,26 +75,24 @@ export function OfflineModeCard({ mode, progress }: OfflineModeCardProps) {
           />
           <StatChip
             icon={Star}
-            iconClassName="text-amber-300"
+            iconClassName="fill-amber-300 text-amber-300"
             value={starsEarned}
             total={totalStars}
             label="estrellas conseguidas"
           />
         </div>
 
-        <div className="mt-5">
-          <div className="mb-2 flex items-baseline justify-between text-[13px]">
-            <span className="text-theme-500">Progreso total</span>
-            <span className="font-semibold text-theme-200 tabular-nums">
-              {percent}%
-            </span>
-          </div>
-          <Progress
-            value={shownPercent}
-            aria-label="Progreso total"
-            className="h-2 bg-theme-50/10 [&>div]:bg-theme-300 [&>div]:duration-1000 [&>div]:ease-out motion-reduce:[&>div]:transition-none"
-          />
-        </div>
+        <Progress
+          value={shownPercent}
+          className="mt-6 gap-2 **:data-[slot=progress-track]:h-2.5 **:data-[slot=progress-track]:bg-theme-950/50 **:data-[slot=progress-indicator]:bg-theme-300 **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out motion-reduce:**:data-[slot=progress-indicator]:transition-none"
+        >
+          <ProgressLabel className="text-sm font-bold tracking-wider text-theme-50/60 uppercase">
+            Progreso total
+          </ProgressLabel>
+          <ProgressValue className="text-sm font-bold tracking-wider text-theme-50/60">
+            {() => `${percent}%`}
+          </ProgressValue>
+        </Progress>
       </div>
     </Link>
   );
