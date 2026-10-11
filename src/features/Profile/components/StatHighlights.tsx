@@ -1,6 +1,6 @@
 import { Flame, Star, Trophy, Zap } from "lucide-react";
 import type { PlayerStats } from "../types";
-import { formatNumber } from "../utils/format";
+import { formatNumber } from "../../../utils/format";
 import { StatTile } from "./StatTile";
 
 interface StatHighlightsProps {

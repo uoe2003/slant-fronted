@@ -9,7 +9,7 @@ import { StatTile } from "../components/StatTile";
 import { ACHIEVEMENTS } from "../consts/achievements";
 import { usePlayerStats } from "../hooks/usePlayerStats";
 import { useProfileStore } from "../store/useProfileStore";
-import { formatNumber, formatPlayTime } from "../utils/format";
+import { formatNumber, formatPlayTime } from "../../../utils/format";
 
 function RowValue({ children }: { children: string }) {
   return (

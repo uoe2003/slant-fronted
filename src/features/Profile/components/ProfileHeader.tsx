@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { getAvatar } from "../consts/avatars";
 import type { PlayerProfile } from "../types";
-import { formatNumber } from "../utils/format";
+import { formatNumber } from "../../../utils/format";
 import { getLevelProgress } from "../utils/stats";
 import { LevelRing } from "./LevelRing";
 

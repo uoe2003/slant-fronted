@@ -1,7 +1,7 @@
 import { SettingsRow } from "@/features/Settings/components/SettingsLayout/SettingsRow";
 import { SettingsSection } from "@/features/Settings/components/SettingsLayout/SettingsSection";
 import type { PlayerStats } from "../types";
-import { formatNumber, formatPlayTime } from "../utils/format";
+import { formatNumber, formatPlayTime } from "../../../utils/format";
 import { getWinRate } from "../utils/stats";
 
 interface StatsSectionProps {
